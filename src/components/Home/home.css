@@ -29,16 +29,23 @@
 }
 .top-track-tit1{
     color: #ffffff;
+    border: 0px;
+    background-color: transparent;
+    font-size: 26px;
 }
 .top-track-tit2{
     padding-left: 30px;
     color: #b0b0b0;
+    border: 0px;
+    background-color: transparent;
+    font-size: 26px;
 }
 .songs-card{
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
+    border-radius: 7px;
 }
 .songs-card1{
     display: flex;
@@ -79,7 +86,7 @@
 }
 
 .songs-card1:hover{
-    background-color: rgb(38,32,23);
+    background-color: #C9DABF;
     color: rgb(255, 255, 255);
     border-radius: 6px;
 }

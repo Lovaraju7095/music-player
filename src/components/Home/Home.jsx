@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import './home.css';
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import "./home.css";
 import logo from "../../assets/spotify-logo.png";
 
 const Home = () => {
@@ -12,51 +12,44 @@ const Home = () => {
   const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [showMenu, setShowMenu] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [currentTab, setCurrentTab] = useState("You");
+  const [searchTerm, setSearchTerm] = useState("");
   const audioRef = useRef(null);
-  const [backgroundColor, setBackgroundColor] = useState('#071952');
-
-  function onShowSong(songId) {
-    const songIndex = data.findIndex(song => song.id === songId);
-    const song = data[songIndex];
-    setSelectedSong(song);
-    setCurrentSongIndex(songIndex);
-
-    setBackgroundColor(song.accent || '#fff');
-  }
+  const [backgroundColor, setBackgroundColor] = useState("#071952");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://cms.samespace.com/items/songs");
-        const result = await response.json();
-
-        if (response.ok) {
-          const resultData = result.data;
-          const updatedData = resultData.map(eachItem => ({
-            accent: eachItem.accent,
-            artist: eachItem.artist,
-            cover: eachItem.cover,
-            dateCreated: new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(eachItem.date_created)),
-            id: eachItem.id,
-            name: eachItem.name,
-            sort: eachItem.sort,
-            status: eachItem.status,
-            topTrack: eachItem.top_track,
-            url: eachItem.url,
-            userCreated: eachItem.user_created,
-            userUpdated: eachItem.user_updated,
-            thumbnail: `https://cms.samespace.com/assets/${eachItem.cover}`
-          }));
-          setData(updatedData);
-        } else {
-          throw new Error('Failed to fetch data');
+        const response = await fetch(
+          "https://cms.samespace.com/items/songs"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
         }
+        const result = await response.json();
+        const updatedData = result.data.map((eachItem) => ({
+          accent: eachItem.accent,
+          artist: eachItem.artist,
+          cover: eachItem.cover,
+          dateCreated: new Intl.DateTimeFormat("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }).format(new Date(eachItem.date_created)),
+          id: eachItem.id,
+          name: eachItem.name,
+          sort: eachItem.sort,
+          status: eachItem.status,
+          topTrack: eachItem.top_track,
+          url: eachItem.url,
+          userCreated: eachItem.user_created,
+          userUpdated: eachItem.user_updated,
+          thumbnail: `https://cms.samespace.com/assets/${eachItem.cover}`,
+        }));
+        setData(updatedData);
+        setLoading(false);
       } catch (error) {
         setError(error.message);
-      } finally {
         setLoading(false);
       }
     };
@@ -82,27 +75,15 @@ const Home = () => {
     }
   };
 
-  const handleNextSong = () => {
+  const handleNextPreviousSong = (direction) => {
     if (currentSongIndex !== null) {
-      const nextIndex = (currentSongIndex + 1) % data.length;
-      setSelectedSong(data[nextIndex]);
-      setCurrentSongIndex(nextIndex);
-    }
-  };
-
-  const handlePreviousSong = () => {
-    if (currentSongIndex !== null) {
-      const prevIndex = (currentSongIndex - 1 + data.length) % data.length;
-      setSelectedSong(data[prevIndex]);
-      setCurrentSongIndex(prevIndex);
-    }
-  };
-
-  const handleVolumeChange = (e) => {
-    const volumeValue = e.target.value;
-    setVolume(volumeValue);
-    if (audioRef.current) {
-      audioRef.current.volume = volumeValue;
+      let newIndex =
+        direction === "next"
+          ? (currentSongIndex + 1) % data.length
+          : (currentSongIndex - 1 + data.length) % data.length;
+      setSelectedSong(data[newIndex]);
+      setCurrentSongIndex(newIndex);
+      setBackgroundColor(data[newIndex].accent || "#fff");
     }
   };
 
@@ -126,34 +107,26 @@ const Home = () => {
 
   const handleAudioTimeUpdate = () => {
     if (audioRef.current) {
-      setProgress((audioRef.current.currentTime / audioRef.current.duration) * 100);
+      setProgress(
+        (audioRef.current.currentTime / audioRef.current.duration) * 100
+      );
     }
   };
 
-  const handlePlaybackRateChange = (rate) => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = rate;
-      setPlaybackRate(rate);
-      setShowMenu(false);
+  const currentSongsList = useMemo(() => {
+    let filteredSongs = data;
+    if (currentTab !== "You") {
+      filteredSongs = data.filter((item) => item.topTrack);
     }
-  };
-
-  const handleDownload = () => {
-    if (selectedSong) {
-      const link = document.createElement('a');
-      link.href = selectedSong.url;
-      link.download = `${selectedSong.name}.mp3`;
-      link.click();
+    if (searchTerm) {
+      filteredSongs = filteredSongs.filter(
+        (song) =>
+          song.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+      );
     }
-  };
-
-  const filteredSongs = data.filter(song =>
-    song.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+    return filteredSongs;
+  }, [data, currentTab, searchTerm]);
 
   return (
     <div className="container-fluid" id="ChangeBgColor" style={{ backgroundColor }}>
@@ -167,21 +140,25 @@ const Home = () => {
 
         <div className="col-12 col-lg-4 p-0">
           <div className="top-track-section">
-            <h2 className="top-track-tit1">For You</h2>
-            <h2 className="top-track-tit2">Top Tracks</h2>
+            <button className="top-track-tit1" style={currentTab === "You" ? { color: "#fff" } : { color: "grey" }} onClick={() => setCurrentTab("You")}>
+              For You
+            </button>
+            <button className="top-track-tit2" style={currentTab === "Tracks" ? { color: "#fff" } : { color: "grey" }} onClick={() => setCurrentTab("Tracks")}>
+              Top Tracks
+            </button>
           </div>
-            <input
-              type="search"
-              placeholder="Search by song or artist"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-inp"
-            />
-          {filteredSongs.length > 0 && (
+          <input
+            type="search"
+            placeholder="Search by song or artist"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-inp"
+          />
+          {currentSongsList.length > 0 && (
             <div>
-              {filteredSongs.map(song => (
-                <div key={song.id} className="songs-card">
-                  <div className="songs-card1" onClick={() => onShowSong(song.id)}>
+              {currentSongsList.map((song) => (
+                <div key={song.id} className="songs-card" style={{ background: song.id === selectedSong?.id ? "#241e16" : "transparent" }}>
+                  <div className="songs-card1" onClick={() => setSelectedSong(song)}>
                     <div className="inside-card">
                       <img src={song.thumbnail} alt={song.name} className="song-image" />
                       <div className="songs-desc">
@@ -200,56 +177,37 @@ const Home = () => {
         <div className="col-12 col-lg-6 active-song-main">
           <div className="active-song-card">
             <div className="active-card1">
-              <span className="card-tit1">{selectedSong ? selectedSong.name : 'Select a song'}</span>
-              <span className="card-tit2">{selectedSong ? selectedSong.artist : ''}</span>
+              <span className="card-tit1">{selectedSong ? selectedSong.name : "Select a song"}</span>
+              <span className="card-tit2">{selectedSong ? selectedSong.artist : ""}</span>
             </div>
-            <div className="active-card2">
-              {selectedSong && <img src={selectedSong.thumbnail} alt={selectedSong.name} className="active-image" />}
-            </div>
+            <div className="active-card2">{selectedSong && <img src={selectedSong.thumbnail} alt={selectedSong.name} className="active-image" />}</div>
             <div className="audio-player-card">
               {selectedSong && (
                 <div className="audio-player">
-                  <audio
-                    ref={audioRef}
-                    src={selectedSong.url}
-                    onTimeUpdate={handleAudioTimeUpdate}
-                    preload="metadata"
-                  >
+                  <audio ref={audioRef} src={selectedSong.url} onTimeUpdate={handleAudioTimeUpdate} preload="metadata">
                     Your browser does not support the audio element.
                   </audio>
                   <div className="audio-controls">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={progress}
-                      onChange={handleProgressChange}
-                      className="progress-bar"
-                    />
+                    <input type="range" min="0" max="100" value={progress} onChange={handleProgressChange} className="progress-bar" />
                     <div className="songs-btn-section">
-                      <button className="aud-btns" onClick={() => setShowMenu(!showMenu)}>
+                      <button className="aud-btns" >
                         ⋯
                       </button>
                       <div className="songs-play-card">
-                        <button className="control-btns" onClick={handlePreviousSong}>◄◄</button>
-                        <button className="control-btns" onClick={handlePlayPause}>
-                          {isPlaying ? '🔊' : '🔇'}
+                        <button className="control-btns" onClick={() => handleNextPreviousSong("previous")}>
+                          ◄◄
                         </button>
-                        <button className="control-btns" onClick={handleNextSong}>►►</button>
+                        <button className="control-btns" onClick={handlePlayPause}>
+                          {isPlaying ? "🔊" : "🔇"}
+                        </button>
+                        <button className="control-btns" onClick={() => handleNextPreviousSong("next")}>
+                          ►►
+                        </button>
                       </div>
                       <button className="aud-btns" onClick={handleMuteUnmute}>
-                        {isMuted ? '🔇' : '🔊'}
+                        {isMuted ? "🔇" : "🔊"}
                       </button>
                     </div>
-                    {/* {showMenu && (
-                      <div className="menu">
-                        <button onClick={() => handlePlaybackRateChange(0.5)}>0.5x</button>
-                        <button onClick={() => handlePlaybackRateChange(1)}>1x</button>
-                        <button onClick={() => handlePlaybackRateChange(1.5)}>1.5x</button>
-                        <button onClick={() => handlePlaybackRateChange(2)}>2x</button>
-                        <button onClick={handleDownload}>Download</button>
-                      </div>
-                    )} */}
                   </div>
                 </div>
               )}
