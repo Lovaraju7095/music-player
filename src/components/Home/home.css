@@ -86,7 +86,7 @@
 }
 
 .songs-card1:hover{
-    background-color: #C9DABF;
+    background-color: rgba(0,0,0,0.2);
     color: rgb(255, 255, 255);
     border-radius: 6px;
 }
@@ -150,13 +150,16 @@
 .aud-btns{
     height: 35px;
     width: 35px;
-    background-color: black;
+    background-color: #ffffff;
     border-radius: 50px;
-    color: rgb(255, 255, 255);
+    color: black;
     border: none;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.three-dots{
+    font-size: 25px;
 }
 .songs-play-card{
     display: flex;
