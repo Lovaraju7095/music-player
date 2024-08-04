@@ -200,3 +200,42 @@
     margin-bottom: 8px;
     font-family: Inter;
 }
+
+.list-container{
+    padding: 0px;
+}
+/* small device media quiries */
+@media screen and (max-width: 767px) {
+    .start-card{
+        flex-direction: row;
+    }
+    .list-container{
+        padding: 20px !important;
+        padding-top: 0px !important;
+    }
+    .top-track-section {
+        justify-content: center;
+        margin-top: 0px;
+    }
+    .songs-card1 {
+        padding: 8px 13px;
+    }
+    .active-image {
+        height: 301px;
+        width: 100%;
+        background-color: blueviolet;
+        border-radius: 7px;
+    }
+
+    .active-card2{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .songs-btn-section{
+        padding: 20px 10px;
+    }
+    .active-song-main {
+        height: 85vh;
+    }
+}

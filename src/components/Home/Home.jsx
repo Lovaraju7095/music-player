@@ -5,6 +5,8 @@ import profile from "../../assets/profile.png";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { ThreeDots } from 'react-loader-spinner';
 import pageNotFound from "../../assets/pageNotFound.jpg"
+import useWindowDimensions from "../hook/useWindowSizes";
+import { IoIosMenu } from "react-icons/io";
 
 
 
@@ -24,7 +26,8 @@ const Home = () => {
   const audioRef = useRef(null);
   const [backgroundColor, setBackgroundColor] = useState('#071952');
   const [currentTab, setCurrentTab] = useState("You");
-
+  const { height, width } = useWindowDimensions();
+  const [isAudioPlayer,setAudioPlayer]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,7 +163,9 @@ const Home = () => {
 
 
 
-  
+  const togglePlayer=()=>{
+    setAudioPlayer((prev)=>!prev)
+  }
 
   if (loading){ return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -174,17 +179,21 @@ const Home = () => {
       </div>
     )
   }
+  const isWeb= 767 <  width
   return (
     <div className="container-fluid" id="ChangeBgColor" style={{ backgroundColor }}>
       <div className="row">
-        <div className="col-12 col-lg-2 start-card" style={{ height: '100vh' }}>
+
+        {/* header container */}
+        <div className="col-12 col-lg-2 start-card">
           <img src={logo} alt="logo image" className="logo" />
           <div className="avatar">
             <img src ={profile} className="avatar" alt="profile"/>
           </div>
         </div>
 
-        <div className="col-12 col-lg-4 p-0">
+        {/* songs list container */}
+     {( isWeb || !isAudioPlayer) &&  <div className="col-12 col-lg-4 p-0 list-container">
           <div className="top-track-section">
           <button className="top-track-tit1" style={currentTab=="You"? {color:'#fff'}:{color:'grey'}} onClick={() => onChangeTopTab("You")}>
               For You
@@ -204,7 +213,9 @@ const Home = () => {
             <div>
               {currentSongsList?.map(song => (
                 <div key={song.id} className="songs-card" style={{background:(song.id==selectedSong?.id)?"rgba(0,0,0,0.2)":'transparent'}}>
-                  <div className="songs-card1" onClick={() => onShowSong(song.id)}>
+                  <div className="songs-card1" onClick={() =>{ onShowSong(song.id);
+                    togglePlayer()
+                  }}>
                     <div className="inside-card">
                       <img src={song.thumbnail} alt={song.name} className="song-image" />
                       <div className="songs-desc">
@@ -218,9 +229,10 @@ const Home = () => {
               ))}
             </div>
           )}
-        </div>
+        </div>}
 
-        <div className="col-12 col-lg-6 active-song-main">
+        {/* active song container */}
+     { ( isWeb || isAudioPlayer) && <div className="col-12 col-lg-6 active-song-main">
           <div className="active-song-card">
             <div className="active-card1">
               <span className="card-tit1">{selectedSong ? selectedSong.name : 'Select a song'}</span>
@@ -250,8 +262,8 @@ const Home = () => {
                       className="progress-bar"
                     />
                     <div className="songs-btn-section">
-                      <button className="aud-btns three-dots" onClick={() => setShowMenu(!showMenu)}>
-                        ⋯
+                      <button className="aud-btns three-dots" onClick={togglePlayer}>
+                      <IoIosMenu />
                       </button>
                       <div className="songs-play-card">
                         <button className="control-btns" onClick={handlePreviousSong}>    <FaStepBackward /></button>
@@ -278,7 +290,7 @@ const Home = () => {
               )}
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );
