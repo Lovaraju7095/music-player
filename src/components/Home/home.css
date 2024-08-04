@@ -26,19 +26,21 @@
     justify-content: start;
     align-items: center;
     padding:20px;
+    font-family: Inter;
+    margin-top: 20px;
 }
 .top-track-tit1{
     color: #ffffff;
     border: 0px;
     background-color: transparent;
-    font-size: 26px;
+    font-size: 24px;
 }
 .top-track-tit2{
     padding-left: 30px;
     color: #b0b0b0;
     border: 0px;
     background-color: transparent;
-    font-size: 26px;
+    font-size: 24px;
 }
 .songs-card{
     display: flex;
@@ -46,6 +48,8 @@
     align-items: center;
     flex-direction: column;
     border-radius: 7px;
+    font-family: Inter;
+    margin-top: 8px;
 }
 .songs-card1{
     display: flex;
@@ -113,6 +117,7 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 30px;
+    font-family: Inter;
 }
 
 .active-image{
@@ -193,4 +198,5 @@
     border: none;
     padding: 15px;
     margin-bottom: 8px;
+    font-family: Inter;
 }

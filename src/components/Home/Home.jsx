@@ -3,6 +3,8 @@ import './home.css';
 import logo from "../../assets/spotify-logo.png";
 import profile from "../../assets/profile.png";
 import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { ThreeDots } from 'react-loader-spinner';
+import pageNotFound from "../../assets/pageNotFound.jpg"
 
 
 
@@ -160,16 +162,25 @@ const Home = () => {
 
   
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
+  if (loading){ return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <ThreeDots color="#00BFFF" height={80} width={80} />
+  </div>
+  )}
+  if (error){ 
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <img src={pageNotFound} alt="Page Not Found" />
+      </div>
+    )
+  }
   return (
     <div className="container-fluid" id="ChangeBgColor" style={{ backgroundColor }}>
       <div className="row">
         <div className="col-12 col-lg-2 start-card" style={{ height: '100vh' }}>
           <img src={logo} alt="logo image" className="logo" />
           <div className="avatar">
-            <img src ={profile} className="avatar"/>
+            <img src ={profile} className="avatar" alt="profile"/>
           </div>
         </div>
 
