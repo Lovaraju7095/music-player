@@ -251,4 +251,9 @@
     .active-song-main {
         height: 85vh;
     }
+    .song-image {
+        border-radius: 50px;
+        height: 53px;
+        width: 53px;
+    }
 }
