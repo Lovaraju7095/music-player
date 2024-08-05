@@ -181,7 +181,7 @@ const Home = () => {
   }
   const isWeb= 767 <  width
   return (
-    <div className="container-fluid" id="ChangeBgColor" style={{ backgroundColor }}>
+    <div className="container-fluid songs-main-card" id="ChangeBgColor" style={{ backgroundColor }}>
       <div className="row">
 
         {/* header container */}
