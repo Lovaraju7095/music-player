@@ -212,8 +212,13 @@
     .songs-card {
         height: 63px;
     }
-    .songs-main-card{
-        height: 100vh;
+    .songs-main-card {
+        height: 100% !important;
+        padding: 0px 10px 25px !important;
+    }
+    .songs-main-card2{
+        height: 100vh !important;
+        padding: 0px 10px 25px !important;
     }
     .start-card{
         flex-direction: row;

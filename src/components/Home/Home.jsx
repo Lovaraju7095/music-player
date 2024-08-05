@@ -28,6 +28,7 @@ const Home = () => {
   const [currentTab, setCurrentTab] = useState("You");
   const { height, width } = useWindowDimensions();
   const [isAudioPlayer,setAudioPlayer]=useState(false)
+  const [isTopTrack, setTopTrack] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,6 +136,7 @@ const Home = () => {
 
   const onChangeTopTab = (tab) => {
     setCurrentTab(tab);
+    setTopTrack((prev) => !prev)
   };
 
   const handleMuteUnmute = () => {
@@ -180,8 +182,9 @@ const Home = () => {
     )
   }
   const isWeb= 767 <  width
+  const mainContainerClass = isTopTrack ? 'songs-main-card' : 'songs-main-card2'
   return (
-    <div className="container-fluid songs-main-card" id="ChangeBgColor" style={{ backgroundColor }}>
+    <div className={`container-fluid ${mainContainerClass}`} id="ChangeBgColor" style={{ backgroundColor }}>
       <div className="row">
 
         {/* header container */}
