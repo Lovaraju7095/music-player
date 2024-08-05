@@ -210,6 +210,9 @@
 
 /* small device media quiries */
 @media screen and (max-width: 767px) {
+    .songs-card {
+        height: 68px;
+    }
     .songs-main-card{
         height: 100vh;
     }
