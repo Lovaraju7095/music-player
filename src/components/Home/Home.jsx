@@ -202,6 +202,7 @@ const Home = () => {
               Top Tracks
             </button>
           </div>
+          <div className="search-card">
             <input
               type="search"
               placeholder="Search by song or artist"
@@ -209,6 +210,7 @@ const Home = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-inp"
             />
+          </div>
           {currentSongsList?.length > 0 && (
             <div>
               {currentSongsList?.map(song => (
