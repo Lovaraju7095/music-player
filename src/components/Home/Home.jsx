@@ -24,7 +24,7 @@ const Home = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const audioRef = useRef(null);
-  const [backgroundColor, setBackgroundColor] = useState('#071952');
+  const [backgroundColor, setBackgroundColor] = useState('#2e2d2d');
   const [currentTab, setCurrentTab] = useState("You");
   const { height, width } = useWindowDimensions();
   const [isAudioPlayer,setAudioPlayer]=useState(false)
