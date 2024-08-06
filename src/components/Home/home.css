@@ -183,9 +183,8 @@
 .control-btns:hover{
     height: 35px;
     width: 35px;
-    background-color: rgb(47, 47, 47);
+    color: rgb(47, 47, 47)!important;
     border-radius: 50px;
-    color: rgb(255, 255, 255);
     border: none;
     display: flex;
     justify-content: center;

@@ -281,15 +281,6 @@ const Home = () => {
                       {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
                       </button>
                     </div>
-                    {/* {showMenu && (
-                      <div className="menu">
-                        <button onClick={() => handlePlaybackRateChange(0.5)}>0.5x</button>
-                        <button onClick={() => handlePlaybackRateChange(1)}>1x</button>
-                        <button onClick={() => handlePlaybackRateChange(1.5)}>1.5x</button>
-                        <button onClick={() => handlePlaybackRateChange(2)}>2x</button>
-                        <button onClick={handleDownload}>Download</button>
-                      </div>
-                    )} */}
                   </div>
                 </div>
               )}
